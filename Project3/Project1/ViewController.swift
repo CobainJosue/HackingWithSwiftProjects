@@ -33,14 +33,6 @@ class ViewController: UITableViewController {
         
         print(pictures)
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(recommendTapped))
-        
-    }
-    
-    @objc func recommendTapped() {
-        let vc = UIActivityViewController(activityItems: ["http://itunes.apple.com/MyApp"], applicationActivities: [])
-        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-        present(vc, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
