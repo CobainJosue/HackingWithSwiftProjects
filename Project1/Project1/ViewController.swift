@@ -19,22 +19,29 @@ class ViewController: UITableViewController {
         
         title = "Storm Viewer"
         
-        let fm = FileManager.default
-        let path = Bundle.main.resourcePath!
-        let items = try! fm.contentsOfDirectory(atPath: path)
-        
-        for item in items {
-            if item.hasPrefix("nssl") {
-                pictures.append(item)
-            }
-        }
-        
-        pictures.sort()
-        
-        print(pictures)
+        performSelector(inBackground: #selector(getImages), with: nil)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(recommendTapped))
         
+    }
+    
+    @objc func getImages() {
+        let fm = FileManager.default
+        let path = Bundle.main.resourcePath!
+        
+        if let items = try? fm.contentsOfDirectory(atPath: path) {
+            for item in items {
+                if item.hasPrefix("nssl") {
+                    pictures.append(item)
+                }
+            }
+            
+            pictures.sort()
+            print(pictures)
+            
+            tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+            
+        }
     }
     
     @objc func recommendTapped() {
