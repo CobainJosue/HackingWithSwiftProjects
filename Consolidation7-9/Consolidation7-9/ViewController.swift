@@ -91,6 +91,7 @@ class ViewController: UIViewController {
                 
             } else {
                 print("Mas de una letra")
+                self.singleActionAlertWithoutHandler(title: "Ops!", message: "You can't choose more than one letter per try 😅", actionTitle: "OK")
             }
             
         }))
