@@ -24,6 +24,9 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
     @objc func addNewPerson() {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            picker.sourceType = .camera
+        }
         picker.delegate = self
         present(picker, animated: true)
     }
@@ -91,7 +94,16 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
             self.collectionView.reloadData()
         })
         
-        present(ac, animated: true)
+        let editAC = UIAlertController(title: "Edit person", message: "What do you want to do?", preferredStyle: .alert)
+        editAC.addAction(UIAlertAction(title: "Rename", style: .default) { [unowned self, ac] _ in
+            self.present(ac, animated: true)
+        })
+        editAC.addAction(UIAlertAction(title: "Delete", style: .default, handler: { [unowned self] _ in
+            self.people.remove(at: indexPath.item)
+            self.collectionView.reloadData()
+        }))
+
+        present(editAC, animated: true)
     }
 
 }
