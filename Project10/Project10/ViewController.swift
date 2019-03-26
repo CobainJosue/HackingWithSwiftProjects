@@ -15,8 +15,11 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
+        navigationItem.title = "People"
+        navigationController?.navigationBar.prefersLargeTitles = true
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
+        print("nav")
     }
 
     
