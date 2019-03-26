@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     var score = 0
     var correctAnswer = 0
     var numberOfAnswers = 0
+    var highestScore = 0
     
 
     override func viewDidLoad() {
@@ -34,6 +35,9 @@ class ViewController: UIViewController {
         button3.layer.borderColor = UIColor.lightGray.cgColor
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .bookmarks, target: self, action: #selector(showScore))
+        
+        let defaults = UserDefaults.standard
+        highestScore = defaults.integer(forKey: "score")
         
         askQuestions()
     }
@@ -75,7 +79,14 @@ class ViewController: UIViewController {
         numberOfAnswers += 1
         
         if numberOfAnswers >= 10 {
-            message = "Your FINAL score is \(score). The game is gonna restart"
+            if score > highestScore {
+                message = "YOU BEAT THE HIGHEST SCORE: \(score)."
+                highestScore = score
+                let defaults = UserDefaults.standard
+                defaults.set(highestScore, forKey: "score")
+            } else {
+                message = "Your FINAL score is \(score). The game is gonna restart"
+            }
             score = 0
             numberOfAnswers = 0
         }

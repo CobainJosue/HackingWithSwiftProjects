@@ -12,6 +12,8 @@ class ViewController: UITableViewController {
     
     var allWords = [String]()
     var usedWords = [String]()
+    
+    var wordSaved: Word!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +32,40 @@ class ViewController: UITableViewController {
             allWords = ["silkworm"]
         }
         
-        startGame()
+        let defaults = UserDefaults.standard
+        if let savedData = defaults.object(forKey: "word") as? Data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                wordSaved = try jsonDecoder.decode(Word.self, from: savedData)
+                title = wordSaved.word
+                usedWords = wordSaved.entries
+                tableView.reloadData()
+            }catch {
+                print("Failed to load the last word")
+            }
+        } else {
+            startGame()
+        }
+        
+    }
+    
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        if let savedData = try? jsonEncoder.encode(wordSaved) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "word")
+        } else {
+            print("Error saving data")
+        }
+        
     }
     
     @objc func startGame() {
         title = allWords.randomElement()
         usedWords.removeAll()
         tableView.reloadData()
+        wordSaved = Word(word: title!, entries: usedWords)
+        save()
     }
     
     @objc func promptForAnswer() {
@@ -62,7 +91,8 @@ class ViewController: UITableViewController {
                     
                     let indexPath = IndexPath(row: 0, section: 0)
                     tableView.insertRows(at: [indexPath], with: .automatic)
-                    
+                    wordSaved = Word(word: title!, entries: usedWords)
+                    save()
                     return
                 } else {
                     showErrorMessage(errorTitle: "Word not recognized", errorMessage: "You can't just make them up, you know!")
